@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Combat Tracker</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<body>
+    <h1>Combat Tracker</h1>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th class="ambusher"><span class="material-icons">flash_on</span></th>
+                    <th class="initiative">Initiative</th>
+                    <th class="name">Name</th>
+                    <th class="damage">Damage</th>
+                    <th>Aim</th>
+                    <th>Cover</th>
+                    <th>Reactions</th>
+                    <th>Run</th>
+                    <th>Prone</th>
+                    <th>Diving</th>
+                    <th>Grappling</th>
+                    <th class="unconscious"><span class="material-icons">hotel</span></th>
+                </tr>
+            </thead>
+            <tbody id="character-list">
+                <tr>
+                    <td></td>
+                    <td class="ambush"><input type="checkbox"></td>
+                    <td class="initiative">
+                        <input type="button" value="-" onclick="adjustCharacterDown(this)">
+                        <input type="number" value="0">
+                        <input type="button" value="+" onclick="adjustCharacterUp(this)">
+                    </td>
+                    <td class="name"><input type="text"></td>
+                    <td class="damage"><input type="number" min="0" placeholder="0"></td>
+                    <td class="aim"><input type="number" min="0" placeholder="0"></td>
+                    <td class="cover"><input type="number" min="0" placeholder="0"></td>
+                    <td class="reactions"><input type="number" min="0" placeholder="0"></td>
+                    <td class="run"><input type="checkbox"></td>
+                    <td class="prone"><input type="checkbox"></td>
+                    <td class="diving"><input type="checkbox"></td>
+                    <td class="grappling"><input type="checkbox"></td>
+                    <td class="unconscious"><input type="checkbox"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <input type="button" value="Add character" onclick="addNewCharacter()">
+        <input type="button" value="Next turn" onclick="moveCursor()">
+        <input type="button" value="Start combat" onclick="startCombat()">
+    </div>
+</body>
+</html>
+
+<style>
+    td input[type=number] {
+        width: 30px;
+    }
+
+    th,td {
+        text-align: center;
+        padding: 5px 15px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    .active-player {
+        background-color: beige !important;
+    }
+
+
+</style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    function addNewCharacter() {
+        $('#character-list:last-child').append(
+            '<tr><td></td><td class="ambush"><input type="checkbox"></td>' +
+            '<td class="initiative">' +
+            '<input type="button" value="-" onclick="adjustCharacterDown(this)"> ' +
+            '<input type="number" value="0"> ' +
+            '<input type="button" value="+" onclick="adjustCharacterUp(this)">' +
+            '<td class="name"><input type="text"></td>' +
+            '<td class="damage"><input type="number" min="0" placeholder="0"></td>' +
+            '<td class="aim"><input type="number" min="0" placeholder="0"></td>' +
+            '<td class="cover"><input type="number" min="0" placeholder="0"></td>' +
+            '<td class="reactions"><input type="number" min="0" placeholder="0"></td>' +
+            '<td class="run"><input type="checkbox"></td>' +
+            '<td class="prone"><input type="checkbox"></td>' +
+            '<td class="diving"><input type="checkbox"></td>' +
+            '<td class="grappling"><input type="checkbox"></td>' +
+            '<td class="unconscious"><input type="checkbox"></td>');
+    }
+
+    function moveCursor() {
+        let $currentPlayer = $('tr.active-player');
+        $currentPlayer.removeClass('active-player');
+        $currentPlayer.children(':first').html('');
+        let $nextPlayer = getNextPlayer($currentPlayer);
+        $nextPlayer.addClass('active-player').children(':first')
+            .html('<span class="material-icons">double_arrow</span>');
+        resetStatsAtStartOfTurn($nextPlayer);
+    }
+
+    function getNextPlayer($currentPlayer) {
+        if ($currentPlayer.next().length === 0) {
+            // It's a new round. Clear all ambushes and sort
+            $('.ambush input').prop('checked', false);
+            sortCharactersByInitiative();
+            return $('#character-list').children(':first');
+        } else {
+            return $currentPlayer.next();
+        }
+    }
+
+    function startCombat() {
+        sortCharactersByInitiative();
+        $('tr.active-player').removeClass('active-player').children(':first').html('');
+        $('#character-list').children(':first').addClass('active-player').children(':first')
+            .html('<span class="material-icons">double_arrow</span>');
+    }
+
+    function sortCharactersByInitiative() {
+        let $charList = $('#character-list');
+        $charList.children().sort(function(a, b) {
+            let ambushA = $('td.ambush input', a).is(':checked') ? 6 : 0;
+            let ambushB = $('td.ambush input', b).is(':checked') ? 6 : 0;
+            return (parseInt($('td.initiative input', b).val()) + ambushB)
+                - (parseInt($('td.initiative input', a).val()) + ambushA);
+        }).appendTo($charList);
+    }
+
+    function resetStatsAtStartOfTurn($character) {
+        $('.reactions input', $character).val('0');
+        $('.run input', $character).prop('checked', false);
+        $('.diving input', $character).prop('checked', false);
+    }
+
+    function adjustCharacterUp(element) {
+        let $currentChar = $(element).closest('tr');
+        let $prevChar = $currentChar.prev();
+        if ($prevChar.length) {
+            $currentChar.insertBefore($prevChar);
+        }
+    }
+
+    function adjustCharacterDown(element) {
+        let $currentChar = $(element).closest('tr');
+        let $nextChar = $currentChar.next();
+        if ($nextChar.length) {
+            $currentChar.insertAfter($nextChar);
+        }
+    }
+</script>
