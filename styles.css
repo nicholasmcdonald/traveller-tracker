@@ -1,0 +1,108 @@
+body {
+    background-color: #dedede;
+    font-family: 'Anton', sans-serif;
+}
+
+h1 {
+    text-align: justify;
+    text-justify: inter-character;
+    text-transform: uppercase;
+}
+
+#edition-banner {
+    padding: 5px;
+    text-transform: uppercase;
+    font-size: 18pt;
+    text-align: justify;
+    border-top: 3px solid black;
+    border-bottom: 3px solid black;
+}
+
+#mongoose {
+    font-style: italic;
+    color: chocolate;
+}
+
+#title-banner {
+    font-size: 40pt;
+    text-transform: uppercase;
+    border-bottom: 15px solid black;
+}
+
+#version {
+
+}
+
+td input[type=number] {
+    width: 30px;
+}
+
+th,td {
+    text-align: center;
+    padding: 5px 15px;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.active-player {
+    background-color: orange !important;
+}
+
+td.character-id,th.character-id {
+    display: none;
+}
+
+th {
+    border-bottom: 1px solid black;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+td {
+    border-left: 1px solid black;
+}
+
+tr td:first-child {
+    border: none;
+}
+
+#blow-up {
+    padding: 15px;
+    margin: 20px 20%;
+}
+
+#blow-up h2 {
+    margin: 5px;
+    text-transform: uppercase;
+}
+
+.blow-up-header {
+    background-color: #424242;
+    color: chocolate;
+    text-align: center;
+    padding: 5px;
+}
+
+.blow-up-body {
+    background-color: #676767;
+    color: white;
+    padding: 20px;
+}
+
+div.warning {
+    border: 1px black dashed;
+    background-color: indianred;
+}
+
+.modifier {
+    line-height: 50px;
+    font-size: 14pt;
+}
+
+.hidden {
+    display: none;
+}
